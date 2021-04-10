@@ -1,0 +1,14 @@
+{
+  "name": "12-hr-backend",
+  "version": "1.0.0",
+  "description": "Simple terminal HR application.",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "test"
+  },
+  "author": "Drew Olsen",
+  "license": "MIT"
+}
