@@ -1,23 +1,25 @@
 const dotenv = require('dotenv')
 const mysql = require('mysql')
 
+require('dotenv').config()
+const DB_HOST = process.env.DB_HOST;
+const DB_USER = process.env.DB_USER;
+const DB_PASS = process.env.DB_PASS;
+const DB_NAME = process.env.DB_NAME;
+
 const connection = mysql.createConnection({
-  host: process.env.DB_HOST,
-  // Your port, if not 3306
+  host: DB_HOST,
   port: 3306,
-  // Your username
-  user: 'root',
-  // Be sure to update with your own MySQL password!
-  password: process.env.DB_PASS,
-  database: process.env.DB_NAME,
+  user: DB_USER,
+  password: DB_PASS,
+  database: DB_NAME,
 });
 
-connection.connect((err) => {
-  if (err) throw err;
-  console.log(`connected as id ${connection.threadId}`);
-  connection.end();
+connection.connect(function (err) {
+    if (err) throw err;
+    console.log(`Connected to DB ${DB_NAME} on ${DB_HOST} Port 3306`);
 });
 
 module.exports = {
-  connection = connection
+  connection: connection
 };

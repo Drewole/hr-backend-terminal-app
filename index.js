@@ -1,35 +1,7 @@
 const mysql = require('mysql');
-const inquirer = require('inquirer')
+const Inquirer = require('inquirer')
 const connection = require('./dbConnect')
 const chalk = require('chalk')
-
-// Read all products at program start
-const readProducts = () => {
-  console.log('Selecting all products...\n');
-  connection.query('SELECT * FROM products', (err, res) => {
-    if (err) throw err;
-    // Log all results of the SELECT statement
-    displayProducts(res);
-    connection.end();
-  });
-};
-
-const deleteProduct = () => {
-  console.log('Deleting all strawberry icecream...\n');
-  connection.query(
-    'DELETE FROM products WHERE ?',
-    {
-      flavor: 'strawberry',
-    },
-    (err, res) => {
-      if (err) throw err;
-      console.log(`${res.affectedRows} products deleted!\n`);
-      // Call readProducts AFTER the DELETE completes
-      readProducts();
-      connection.end();
-    }
-  );
-};
 
 // The command-line application should allow users to:
 // Add departments, roles, employees
@@ -60,15 +32,15 @@ let init = () => {
         switch (data.action) {
             case "View All Departments":
                 department.printDepartments();
-                start();
+                init();
                 break;
             case "View All Roles":
                 role.printRoles();
-                start();
+                init();
                 break;
             case "View All Employees":
                 employee.printEmployees();
-                start();
+                init();
                 break;
             case "Add Employee":
                 addEmployee();
@@ -93,12 +65,78 @@ let init = () => {
                 break;
             default:
                 console.log(`Action (${data.action}) is not supported.`);
-                start();
+                init();
                 break;
         }
     });
 }
-    
+
+// This function will handle adding a role
+function addDepartment() {
+    let question = "What department would you like to add?";
+    Inquirer.prompt(
+        {
+            name: "department",
+            type: "input",
+            message: question
+        }
+    ).then((data) => {
+        department.insertDepartment(data.department);
+        init();
+    });
+}
+
+// This function will handle adding a role
+function addRole() {
+    let departments = ["No Department"];
+    // First get the list of departments    
+    DB.query("SELECT * FROM department",
+        function (err, res) {
+            if (err) console.log(err);
+            for (let i = 0; i < res.length; i++) {
+                if (res[i].name) {
+                    departments.push(res[i].name);
+                }
+            }
+
+            // Get the role details
+            let questions = [
+                "Role Name",
+                "Role Salary",
+                "What department?"];
+            Inquirer.prompt([
+                {
+                    name: "title",
+                    type: "input",
+                    message: questions[0]
+                },
+                {
+                    name: "salary",
+                    type: "number",
+                    message: questions[1]
+                },
+                {
+                    name: "department",
+                    type: "list",
+                    message: questions[2],
+                    choices: departments
+                }
+            ]).then((data) => {
+                // get the department to tie to 
+                let departmentId = null;
+                for (let i = 0; i < res.length; i++) {
+                    if (res[i].name === data.department) {
+                        departmentId = res[i].id;
+                    }
+                }
+                role.insertRole(data.title, data.salary, departmentId);
+                init();
+            });
+
+        }
+    );
+}
+
 connection.connect((err) => {
     if (err) throw err;
     init();
