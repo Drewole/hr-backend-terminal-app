@@ -15,11 +15,6 @@ const connection = mysql.createConnection({
   database: DB_NAME,
 });
 
-connection.connect(function (err) {
-    if (err) throw err;
-    console.log(`Connected to DB ${DB_NAME} on ${DB_HOST} Port 3306`);
-});
-
 module.exports = {
   connection: connection
 };

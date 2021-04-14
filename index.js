@@ -1,12 +1,22 @@
+const Inquirer = require('inquirer');
+const dbConnect = require('./dbConnect');
+const cTable = require('console.table');
 const mysql = require('mysql');
-const Inquirer = require('inquirer')
-const connection = require('./dbConnect')
-const chalk = require('chalk')
+const chalk = require('chalk');
+const Employee = require("./components/Employee");
+const Role = require("./components/Role");
+const Department = require("./components/Department");
+
+// Global Variables
+let employee = new Employee(dbConnect);
+let role = new Role(dbConnect);
+let department = new Department(dbConnect);
 
 // The command-line application should allow users to:
 // Add departments, roles, employees
 // View departments, roles, employees
 // Update employee roles
+
 let init = () => {
     let question = "What can I do for you boss?";
     let options = [
@@ -73,7 +83,7 @@ let init = () => {
 
 // This function will handle adding a role
 function addDepartment() {
-    let question = "What department would you like to add?";
+    let question = "Name of Department to add."
     Inquirer.prompt(
         {
             name: "department",
@@ -88,9 +98,9 @@ function addDepartment() {
 
 // This function will handle adding a role
 function addRole() {
-    let departments = ["No Department"];
+    let departments = ["No Departments"];
     // First get the list of departments    
-    DB.query("SELECT * FROM department",
+    DB.query("SELECT * FROM departments",
         function (err, res) {
             if (err) console.log(err);
             for (let i = 0; i < res.length; i++) {
@@ -137,7 +147,8 @@ function addRole() {
     );
 }
 
-connection.connect((err) => {
+dbConnect.connection.connect(function (err) {
     if (err) throw err;
+
     init();
-})
+});

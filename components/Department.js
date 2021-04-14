@@ -1,3 +1,5 @@
+const mysql = require('mysql')
+const cTable = require('console.table');
 
 class Department {
     //What props?
@@ -23,8 +25,8 @@ class Department {
     // This function will print a list of all departments
     printDepartments(){
         this.connection.query(
-            "SELECT d.id, d.name " +
-            "FROM department d ",
+            "SELECT departments.id, departments.name " +
+            "FROM departments",
             function (err, res) {
                 if (err) console.log(err);
                 // Print departments
@@ -35,7 +37,7 @@ class Department {
     }
     // This function will create an entry into the department table
     insertDepartment(departmentName = this.name){
-        this.connection.query("INSERT INTO department (name) VALUES (?)", [departmentName] ,
+        this.connection.query("INSERT INTO departments (name) VALUES (?)", [departmentName] ,
             function (err, res) {
                 if (err) console.log(err);
             }
@@ -44,7 +46,7 @@ class Department {
 
     // This function will update the db for the current department
     updateDepartment() {
-        this.connection.query("UPDATE department SET ? WHERE ?", { name: this.name }, { id: this.id },
+        this.connection.query("UPDATE departments SET ? WHERE ?", { name: this.name }, { id: this.id },
             function (err, res) {
                 if (err) console.log(err);
             }
@@ -53,11 +55,11 @@ class Department {
 
     // This function will delete the department from the db
     deleteDepartment() {
-        this.connection.query("DELETE FROM department WHERE ?", { id: this.id },
+        this.connection.query("DELETE FROM departments WHERE ?", { id: this.id },
             function (err, res) {
                 if (err) console.log(err);
             }
         );
     }
 }
-    
+module.exports = Department;
