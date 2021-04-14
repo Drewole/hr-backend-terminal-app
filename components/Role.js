@@ -28,9 +28,9 @@ class Role {
     // This function will return a list of all roles
     printRoles(){
         this.connection.query(
-            "SELECT r.id, r.title, d.name, r.salary " +
-            "FROM role r " +
-            "LEFT JOIN department d ON r.department_id = d.id ",
+            "SELECT roles.id, roles.title, roles.name, roles.salary " +
+            "FROM role" +
+            "LEFT JOIN departments ON roles.department_id = departments.id ",
             function (err, res) {
                 if (err) console.log(err);
                 // Print roles
