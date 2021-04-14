@@ -4,7 +4,7 @@ class Department {
     //departmentID
     // Department Name
     // This will be our base class
-    constructor(id = 0, connection, name = "") {
+    constructor(id = 0, name = "") {
         this.id = id;
         // INT PRIMARY KEY
         this.name = name;
